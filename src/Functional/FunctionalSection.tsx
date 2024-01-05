@@ -1,8 +1,37 @@
-// you can use this type for react children if you so choose
-import { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { ActiveComponent } from "../types";
+import { ReactNode } from "react";
 
-export const FunctionalSection = () => {
+export const FunctionalSection = ({
+  children,
+  determineActiveComponent,
+  activeComponent,
+  favoritedDogsCount,
+  unfavoritedDogsCount,
+}: {
+  children: ReactNode;
+  determineActiveComponent: (component: ActiveComponent) => void;
+  activeComponent: ActiveComponent;
+  favoritedDogsCount: number;
+  unfavoritedDogsCount: number;
+}) => {
+  const generateClassName = (
+    activeComponent: ActiveComponent,
+    currentComponent: ActiveComponent
+  ) => {
+    return activeComponent === currentComponent ? "active" : "";
+  };
+
+  const favoritedClassName = generateClassName(activeComponent, "favorited");
+  const unfavoritedClassName = generateClassName(
+    activeComponent,
+    "unfavorited"
+  );
+  const createDogFormClassName = generateClassName(
+    activeComponent,
+    "create-dog-form"
+  );
+
   return (
     <section id="main-section">
       <div className="container-header">
@@ -11,21 +40,27 @@ export const FunctionalSection = () => {
           Change to Class
         </Link>
         <div className="selectors">
-          {/* This should display the favorited count */}
-          <div className={`selector active`} onClick={() => {}}>
-            favorited ( 12 )
+          <div
+            className={`selector ${favoritedClassName}`}
+            onClick={() => determineActiveComponent("favorited")}
+          >
+            favorited ( {favoritedDogsCount} )
           </div>
-
-          {/* This should display the unfavorited count */}
-          <div className={`selector`} onClick={() => {}}>
-            unfavorited ( 25 )
+          <div
+            className={`selector ${unfavoritedClassName}`}
+            onClick={() => determineActiveComponent("unfavorited")}
+          >
+            unfavorited ( {unfavoritedDogsCount} )
           </div>
-          <div className={`selector`} onClick={() => {}}>
+          <div
+            className={`selector ${createDogFormClassName}`}
+            onClick={() => determineActiveComponent("create-dog-form")}
+          >
             create dog
           </div>
         </div>
       </div>
-      <div className="content-container"></div>
+      <div className="content-container">{children}</div>;
     </section>
   );
 };
